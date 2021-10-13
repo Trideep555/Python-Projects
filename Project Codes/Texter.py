@@ -4,6 +4,7 @@ from tkinter.filedialog import *
 import os
 
 
+
 def Newfile():
     global f1
     root.title("Untitled - Texter")
@@ -43,8 +44,7 @@ def Savefile():
 
 
 def exitapp():
-    root.destroy()
-
+    on_closing()
 
 def cut():
     Text.event_generate("<<Cut>>")
@@ -60,6 +60,25 @@ def paste():
 
 def about():
     showinfo("About Texter", "Created By Trideep Banerjee By Python Tkinter")
+
+
+def on_closing():
+    global f1
+    if f1 == None:
+        if askokcancel("Are you sure?", "Do You want to Save file and then quit") == True:
+            Savefile()
+        else:
+            root.destroy()
+
+    else:
+        f=open(f1)
+        f2=Text.get(1.0, END)
+        if f.read().strip() == f2.strip():
+            root.destroy()
+        else:
+            if askokcancel("Are you sure?", "Do You want to Save file and then quit") == True:
+                Savefile()
+                root.destroy()
 
 
 if __name__ == '__main__':
@@ -97,4 +116,5 @@ if __name__ == '__main__':
     scroll.pack(side=RIGHT, fill=Y)
     scroll.config(command=Text.yview)
     Text.config(yscrollcommand=scroll.set)
+    root.protocol("WM_DELETE_WINDOW", on_closing)
     root.mainloop()
