@@ -93,10 +93,12 @@ def readnews(category="NULL"):
 
 def quote_of_the_day():
 	response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random")
-	if response.status_code == 200:
-			json_data = response.json()
-			data = json_data['data']
-			print(data[0]['quoteText'])
+	if response.status_code == 200:    
+		json_data = response.json()
+		data = json_data['data']
+		print("\""+data[0]['quoteText']+"\" \n -By "+data[0]['quoteAuthor']);speak(f"{data[0]['quoteText']} Told By {data[0]['quoteAuthor']}")
+        
+                     
 	else:
 			print("Error while getting quote")
     
@@ -116,8 +118,7 @@ def showweather(city_name="Kolkata"):
     
         y = x["main"]
     
-        current_temperature = y["temp"]
-    
+        current_temperature = (int)(y["temp"]-273)
         current_pressure = y["pressure"]
     
         current_humidity = y["humidity"]
@@ -125,22 +126,9 @@ def showweather(city_name="Kolkata"):
         z = x["weather"]
     
         weather_description = z[0]["description"]
-    
-        speak("Temperature (in kelvin unit) = " ,
-                        str(current_temperature) ,
-            " atmospheric pressure (in hPa unit) = " ,
-                        str(current_pressure) ,
-            " humidity (in percentage) = " ,
-                        str(current_humidity) ,
-                        str(weather_description))
-        print(" Temperature (in kelvin unit) = " +
-                        str(current_temperature) +
-            "\n atmospheric pressure (in hPa unit) = " +
-                        str(current_pressure) +
-            "\n humidity (in percentage) = " +
-                        str(current_humidity) +
-            "\n description = " +
-                        str(weather_description))
+        print(" Temperature = " + str(current_temperature) +" Degree Celcius\n atmospheric pressure= " +str(current_pressure) +"Hpa\n humidity = " +str(current_humidity) +"%\n description = " +str(weather_description))    
+        speak(f"Temperature= {str(current_temperature)} Degree Celcius. Atmospheric pressure = {str(current_pressure)} hpa. Humidity  ={str(current_humidity)} percentage. Currently {str(weather_description)}")
+        
     
     else:
         print(" City Not Found ")
@@ -155,7 +143,7 @@ def command_list():
     print("5. Jokes")
     print("6.Open WhatsApp")
     print("7.WhatsApp Someone")
-    print("8.Open my website 1.doctor 2.tuition")
+    print("8.Open my website 1.doctor 2.tuition 3.blobtech")
     print("9.Send Mail")
     print("10. Open code")
     print("11. Open C++")
@@ -176,8 +164,8 @@ def command_list():
     print("26.Quote_of_the_day")
     print("27.Who are you?")
     print("28.Who created you?")
-    print("29.Pause for __ seconds max 99 seconds")
-    print("30.Pause for __ minutes max 9 minutes")
+    print("29.Pause for __ seconds (10-99 seconds)")
+    print("30.Pause for __ minutes (1-9 minutes)")
     print("31.Shutdown My Computer")
     print("32.Restart My Computer")
     print("33. Thank You")
@@ -206,9 +194,11 @@ def actions(query):
             speak("Which one do you wanna open")
             query2 = commands().lower()
             if 'doctor' in query2:
-                webbrowser.open("animalacollections.com/doctor")
+                webbrowser.open("animalacocllections.com/doctor")
             elif 'tution' in query2:
                 webbrowser.open("schoolcodehub.com")
+            elif 'blobtech' in query2:
+                webbrowser.open("blobtech.co.in")
             else:
                 speak("No such Website you created")
         elif 'open whatsapp' in query:
@@ -258,9 +248,9 @@ def actions(query):
             readnews("technology")
         elif 'weather here' in query:
             showweather()
-        elif 'show weather in' in query:
-            city_name = input("Please Enter the city name")
+        elif 'show weather' in query:
             speak("Please Enter the city name")
+            city_name = input("Please Enter the city name")
             showweather(city_name)
         elif 'time' in query:
             print(d.datetime.now().strftime("%I:%M:%S"))
@@ -296,6 +286,8 @@ def actions(query):
             quit()
         elif 'commands' in query:
             command_list()
+        elif 'none' in query:
+            pass
         else:
             print("I am sorry I do not know that")
             print("Please Contact Trideep if u want to add this answer")
